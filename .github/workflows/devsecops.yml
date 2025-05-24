@@ -1,0 +1,36 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security_scans:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Semgrep for SAST
+    - name: Run Semgrep SAST
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: "p/ci"  # default CI ruleset, customize if you want
+
+    # Gitleaks for Secrets Scanning
+    - name: Run Gitleaks Secrets Scan
+      uses: zricethezav/gitleaks-action@v2
+      with:
+        verbose: true
+
+    # Snyk for Software Composition Analysis (SCA)
+    - name: Run Snyk to scan for vulnerabilities
+      uses: snyk/actions@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: test
+        

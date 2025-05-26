@@ -1,4 +1,4 @@
-name: OWASP Dependency-Check
+name: Dependency Check
 
 on:
   push:
@@ -14,27 +14,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Java (required for OWASP DC)
+        uses: actions/setup-java@v3
         with:
-          node-version: '18'
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run OWASP Dependency-Check
+      - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: "DVWA"
-          format: "HTML,JSON"
+          project: "YourProjectName"
+          format: "HTML"
           out: "dependency-check-reports"
-          scan: "."
-          arguments: >
-            --enableExperimental
-            --nodePackageSkipDevDependencies=false
 
-      - name: Upload dependency-check report
-        uses: actions/upload-artifact@v2
+      - name: Upload Dependency-Check report
+        uses: actions/upload-artifact@v2.3.1  
         with:
           name: dependency-check-report
           path: dependency-check-reports

@@ -34,7 +34,7 @@ jobs:
             --nodePackageSkipDevDependencies=false
 
       - name: Upload dependency-check report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: dependency-check-report
           path: dependency-check-reports

@@ -1,4 +1,4 @@
-
+# .github/workflows/semgrep.yml
 name: Semgrep
 
 on:
@@ -11,6 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: returntocorp/semgrep-action@v1
-        with:
-          config: auto
+
+      # Install latest Semgrep via pip (instead of using old action version)
+      - name: Install latest Semgrep
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install --upgrade semgrep
+
+      # Run semgrep scan manually
+      - name: Run Semgrep
+        run: |
+          semgrep --config auto --error --verbose

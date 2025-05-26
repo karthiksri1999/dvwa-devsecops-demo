@@ -1,32 +1,30 @@
-name: Dependency Check
+name: OWASP Dependency Check (SCA)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - master
   pull_request:
-    branches: [main]
 
 jobs:
   dependency-check:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: "YourProjectName"
-          format: "HTML"
-          out: "dependency-check-reports"
+          project: 'your-project-name'
+          path: './'
+          format: 'ALL'
+          out: 'dependency-check-report'
 
-      - name: Upload Dependency-Check Report
+      - name: Upload Dependency Check Report
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: dependency-check-report
-          path: dependency-check-reports
+          path: dependency-check-report

@@ -2,8 +2,9 @@ name: OWASP Dependency-Check
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
   pull_request:
+    branches: [main]
 
 jobs:
   dependency-check:
@@ -13,17 +14,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: "MyProject"
-          format: "ALL"
-          out: "reports"
+          project: "DVWA"
+          format: "HTML,JSON"
+          out: "dependency-check-reports"
           scan: "."
+          arguments: >
+            --enableExperimental
+            --nodePackageSkipDevDependencies=false
 
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@v4  
+      - name: Upload dependency-check report
+        uses: actions/upload-artifact@v3
         with:
           name: dependency-check-report
-          path: reports
+          path: dependency-check-reports

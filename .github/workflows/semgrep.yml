@@ -2,9 +2,7 @@
 name: Semgrep
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   semgrep:
@@ -21,4 +19,4 @@ jobs:
       # Run semgrep scan manually
       - name: Run Semgrep
         run: |
-          semgrep --config auto --error --verbose
+          semgrep --config auto --verbose

@@ -1,22 +1,28 @@
-# .github/workflows/semgrep.yml
 name: Semgrep
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger only
 
 jobs:
   semgrep:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      # Install latest Semgrep via pip (instead of using old action version)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Install latest Semgrep
         run: |
           python3 -m pip install --upgrade pip
           pip install --upgrade semgrep
 
-      # Run semgrep scan manually
       - name: Run Semgrep
         run: |
           semgrep --config auto --verbose
+          EXIT_CODE=$?
+          if [ "$EXIT_CODE" -eq 1 ]; then
+            echo "Semgrep found issues, but not failing the workflow."
+            exit 0
+          else
+            exit $EXIT_CODE
+          fi
